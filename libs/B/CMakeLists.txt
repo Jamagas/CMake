@@ -1,6 +1,6 @@
 
 set(B_LIBRARY_NAME
-	B
+    B
 )
 set(B_LIBRARY_HEADERS_DIR
     include/${B_LIBRARY_NAME}
