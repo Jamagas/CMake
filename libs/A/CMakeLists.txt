@@ -29,3 +29,10 @@ target_include_directories(${A_LIBRARY_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
+
+add_subdirectory(test/gtest-1.7.0)
+enable_testing()
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+add_executable(ALibraryUnitTests test/ATests.cpp)
+target_link_libraries(ALibraryUnitTests gtest gtest_main ${A_LIBRARY_NAME})
+add_test(ALibraryUnitTests ALibraryUnitTests)
