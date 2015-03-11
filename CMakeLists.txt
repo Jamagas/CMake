@@ -18,11 +18,21 @@ set(FOO_LIBRARIES
     B
 )
 
+project(${FOO_PROJECT_NAME})
+
+#########
+# GTest #
+#########
+enable_testing()
+add_subdirectory(libs/gtest-1.7.0)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+###########
+# Project #
+###########
+add_executable(${FOO_PROJECT_NAME} ${FOO_SOURCE})
+
 foreach(LIBRARY ${FOO_LIBRARIES})
     add_subdirectory("${FOO_LIBRARIES_DIR}/${LIBRARY}")
 endforeach(LIBRARY)
-
-project(${FOO_PROJECT_NAME})
-
-add_executable(${FOO_PROJECT_NAME} ${FOO_SOURCE})
 target_link_libraries(${FOO_PROJECT_NAME} ${FOO_LIBRARIES})

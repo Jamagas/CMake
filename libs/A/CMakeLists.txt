@@ -1,4 +1,9 @@
 
+cmake_minimum_required(VERSION 3.0.0)
+
+set(PROJECT_NAME
+    ALibrary
+)
 set(A_LIBRARY_NAME
     A
 )
@@ -15,6 +20,8 @@ set(A_LIBRARY_SOURCE
     ${A_LIBRARY_SOURCE_DIR}/A.cpp
 )
 
+project(${PROJECT_NAME})
+
 add_library(${A_LIBRARY_NAME} STATIC
     ${A_LIBRARY_HEADERS}
     ${A_LIBRARY_SOURCE}
@@ -30,9 +37,4 @@ target_include_directories(${A_LIBRARY_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-add_subdirectory(test/gtest-1.7.0)
-enable_testing()
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-add_executable(ALibraryUnitTests test/ATests.cpp)
-target_link_libraries(ALibraryUnitTests gtest gtest_main ${A_LIBRARY_NAME})
-add_test(ALibraryUnitTests ALibraryUnitTests)
+add_subdirectory(test)
