@@ -51,6 +51,7 @@ Foo
 ## Running CMake
 
 To run CMake you need to go into Foo directory and do these steps:
+
 1. Create build directory `mkdir build`.
 2. Go into created build directory `cd build`.
 3. Run CMake to create XCode project `cmake -G Xcode ../`, but you can create any other project you want.
