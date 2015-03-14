@@ -12,6 +12,9 @@ But it contains valuable insights how to structure your code that it would be ea
 
 Project structure is basically one master project with two static libraries.
 
+Insight is that Foo is some kind of project you are working on and deliver as a product.
+This Foo product depends on two static libraries A and B which is stand alone libraries without external dependencies.
+
 ```
 Foo
  ├── CMakeLists.txt
