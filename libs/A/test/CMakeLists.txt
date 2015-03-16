@@ -20,6 +20,6 @@ add_executable(${TEST_PROJECT_NAME} ${LIBRARY_TESTS_SOURCE})
 target_link_libraries(${TEST_PROJECT_NAME} 
     gtest 
     gtest_main 
-    ${LIBRARY_NAME}
+    ${LIBRARY_NAME} # NOTE: This is defined from project above
 )
 add_test(${TEST_PROJECT_NAME} ${TEST_PROJECT_NAME})
