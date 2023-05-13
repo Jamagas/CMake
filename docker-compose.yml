@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  builder:
+    image: cmake_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/app

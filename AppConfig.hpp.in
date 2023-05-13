@@ -1,0 +1,5 @@
+#define App_VERSION_MAJOR @MyApp_VERSION_MAJOR@
+#define App_VERSION_MINOR @MyApp_VERSION_MINOR@
+#cmakedefine USE_RINGBUFFER 1
+#cmakedefine USE_CALCULATOR 1
+

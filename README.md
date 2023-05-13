@@ -1,65 +1,86 @@
 
-# CMake example
+# CMake C++ Project template
 
-This repository is CMake project structure example originally created for XCode project generation.
-But it contains valuable insights how to structure your code that it would be easy to maintain using CMake.
+This repository is CMake project structure originally by [Darius Sabaliauskas](https://github.com/Jamagas) [here](https://github.com/Jamagas/CMake). I refactored it a bit to 
+- added an AppConfig.hpp header if you need to configure some defines for your application
+- use a build script to build, clean and run tests project (This script can generate projects for Xcode/Visual Studio).
+- added generation of code coverate reports.
+- use docker build if you need to run the build in a container.
+- removed gtest and use Fetchcontent to get it
 
 ## Table of contents
 - [Project structure](#project-structure)
-- [Running CMake](#running-cmake)
+- [Building Project](#building-project)
 - [Copyright and license](#copyright-and-license)
 
 ## Project structure
+In this example project structure there is one master project with two static libraries.
+Each library has it's own tests.
 
-Project structure is basically one master project with two static libraries.
-
-Insight is that Foo is some kind of project you are working on and deliver as a product.
-This Foo product depends on two static libraries A and B which is stand alone libraries without external dependencies.
 
 ```
-Foo
- ├── CMakeLists.txt
- ├── README.md
- ├── include
- ├── libs
- │   ├── A
- │   │   ├── CMakeLists.txt
- │   │   ├── include
- │   │   │   └── A
- │   │   │       └── A.h
- │   │   ├── src
- │   │   │   └── A.cpp
- │   │   └── test
- │   │       ├── ATests.cpp
- │   │       └── CMakeLists.txt
- │   ├── B
- │   │   ├── CMakeLists.txt
- │   │   ├── include
- │   │   │   └── B
- │   │   │       └── B.h
- │   │   ├── src
- │   │   │   └── B.cpp
- │   │   └── test
- │   │       ├── BTests.cpp
- │   │       └── CMakeLists.txt
- │   └── gtest-1.7.0
- ├── src
- │   └── main.cpp
- └── test
+.
+├── AppConfig.hpp.in
+├── CMakeLists.txt
+├── Dockerfile
+├── LICENSE.txt
+├── README.md
+├── build.sh
+├── docker-compose.yml
+├── entrypoint.sh
+├── libs
+│   ├── Calculator
+│   │   ├── CMakeLists.txt
+│   │   ├── include
+│   │   │   └── Calculator.hpp
+│   │   ├── src
+│   │   │   └── Calculator.cpp
+│   │   └── tests
+│   │       ├── CMakeLists.txt
+│   │       ├── main.cpp
+│   │       └── tests.cpp
+│   └── RingBuffer
+│       ├── CMakeLists.txt
+│       ├── include
+│       │   └── RingBuffer.hpp
+│       ├── src
+│       │   └── RingBuffer.cpp
+│       └── tests
+│           ├── CMakeLists.txt
+│           ├── main.cpp
+│           └── tests.cpp
+└── src
+    └── main.cpp
 ```
 
-## Running CMake
-
-To run CMake you need to go into Foo directory and do these steps:
-
-1. Create build directory `mkdir build`.
-2. Go into created build directory `cd build`.
-3. Run CMake to create XCode project `cmake -G Xcode ../`, but you can create any other project you want.
-4. Open XCode project `open Foo.xcodeproj`.
+## Building Project
+1. Running ```./build.sh --all``` will generate Xcode project when run on Mac, Visual Studio 2022 when run on Windows.
+2. Running ```./build.sh --docker``` will build and run the tests in a docker container.
 
 **NOTE**: 
 DO NOT make changes to generated project file, instead edit CMakeLists.txt files and regenerate project using CMake.
 For example, when you want to add files to project you update CMakeLists.txt to include those files and regenerate build system using CMake.
+
+For the Xcode Project (specially building and running the tests), if you do not add `DISCOVERY_MODE PRE_TEST` to `gtest_discover_tests` like this:
+```
+gtest_discover_tests(${PROJECT_NAME}
+	DISCOVERY_MODE PRE_TEST
+)
+```
+you might get an error like this for example:
+```
+PhaseScriptExecution CMake\ PostBuild\ Rules /Users/blah/CMake_CPP/buildxc/build/RingBufferTest.build/Debug/Script-5E960E25A8C4527A9C67F81F.sh (in target 'RingBufferTest' from project 'MyApp')
+    cd /Users/blah/CMake_CPP
+    /bin/sh -c /Users/blah/CMake_CPP/buildxc/build/RingBufferTest.build/Debug/Script-5E960E25A8C4527A9C67F81F.sh
+CMake Error at /Applications/CMake.app/Contents/share/cmake-3.26/Modules/GoogleTestAddTests.cmake:112 (message):
+  Error running test executable.
+
+    Path: '/Users/blah/CMake_CPP/buildxc/libs/RingBuffer/tests/Debug/RingBufferTest'
+    Result: Subprocess killed
+    Output:
+```
+
+The other option is to open the xcode project and then delete the POST BUILD step for the test project
 
 ## Copyright and license
 
