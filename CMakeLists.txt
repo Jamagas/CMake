@@ -21,7 +21,7 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
 # Set compiler options for the project
 target_compile_options(${PROJECT_NAME}_compiler_flags INTERFACE
-  "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-fprofile-arcs;-ftest-coverage;--coverage;-fprofile-instr-generate;-fcoverage-mapping>>"
+  "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-fprofile-arcs;-ftest-coverage;--coverage>>"
   "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
 
@@ -76,6 +76,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES} ${PROJECT_NAME}_compiler_flags)
 
 add_dependencies(${PROJECT_NAME} ${APP_LIBRARIES})
+
+# Enable testing if the ENABLE_TESTING option is on
+if(ENABLE_TESTING)
+	enable_testing()
+endif()
 
 # Add the install targets for the project
 install(TARGETS ${PROJECT_NAME} 

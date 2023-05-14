@@ -73,9 +73,12 @@ function build() {
       # Run tests and generate coverage report
       echo "Running Tests..."
       rm *.info
-      ctest --verbose --output-on-failure
-      lcov --directory App --directory Test --directory build --capture --output-file coverage.info
-      lcov --remove coverage.info '/usr/include/*' '/Applications/Xcode_13.2.app/*' '/app/build/_deps/*' '/app/build/Testing/*' './build/_deps/*' -o cov_test_filtered.info
+      ctest -C $build_type --coverage --verbose --output-on-failure
+      lcov --directory build --capture --output-file cov_test_filtered.info
+      lcov --remove coverage.info '/usr/include/*' -o cov_test_filtered.info
+      lcov --remove cov_test_filtered.info '/Applications/Xcode.app/*' -o cov_test_filtered.info
+      lcov --remove cov_test_filtered.info '*/_deps/*'  -o cov_test_filtered.info
+      lcov --remove cov_test_filtered.info '*/Testing/*' -o cov_test_filtered.info
       genhtml cov_test_filtered.info --output-directory coverage_report
       echo "Coverage report generated at $(realpath coverage_report/index.html)"
     fi

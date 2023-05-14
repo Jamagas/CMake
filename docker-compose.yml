@@ -15,7 +15,7 @@ services:
       target: cmake_app
     image: cmake_app:latest
     depends_on:
-      - cmake_base_with_sfml
+      - cmake_build
     volumes:
       - .:/app
     working_dir: /app

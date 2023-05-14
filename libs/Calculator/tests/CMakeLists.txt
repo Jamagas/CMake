@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.26)
 
 project(CalculatorTest)
 
+enable_testing()
+
+message (STATUS "CTEST_CONFIGURATION_TYPE: ${CTEST_CONFIGURATION_TYPE}")
+
 set(TEST_SOURCES
 	main.cpp
 	tests.cpp
@@ -64,7 +68,7 @@ target_link_libraries(${PROJECT_NAME}
 	${PROJECT_NAME}_compiler_flags
 )
 
-# add_test(${PROJECT_NAME} ${PROJECT_NAME})
+add_test(${PROJECT_NAME} ${PROJECT_NAME})
 
 # Discover tests
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)

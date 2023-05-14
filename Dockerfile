@@ -7,7 +7,7 @@ LABEL Name=cmake_build Version=0.0.1
 
 # Update package lists and install required dependencies
 RUN apt-get update && \
-    apt-get install -y git build-essential libssl-dev python3-pip
+    apt-get install -y git build-essential libssl-dev python3-pip lcov
 
 # Clone CMake repository and switch to the desired version (3.26 in this case)
 RUN git clone https://gitlab.kitware.com/cmake/cmake.git && \
@@ -28,8 +28,6 @@ ENV PATH="/usr/local/bin:${PATH}"
 #########################################################
 # Build Second Stage
 #########################################################
-
-# Second part: cmake_app image
 FROM cmake_build AS cmake_app
 
 LABEL Name=cmake_app Version=0.0.1

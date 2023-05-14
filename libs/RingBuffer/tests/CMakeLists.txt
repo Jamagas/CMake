@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(RingBufferTest)
 
+enable_testing()
+
 set(TEST_SOURCES
 	main.cpp
 	tests.cpp
@@ -64,7 +66,7 @@ target_link_libraries(${PROJECT_NAME}
 	${PROJECT_NAME}_compiler_flags
 )
 
-# add_test(${PROJECT_NAME} ${PROJECT_NAME})
+add_test(${PROJECT_NAME} ${PROJECT_NAME})
 
 # Discover tests
 set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
