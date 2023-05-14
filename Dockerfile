@@ -1,5 +1,9 @@
-# First part: cmake_build image
+#########################################################
+# Build First Stage
+#########################################################
 FROM ubuntu:latest AS cmake_build
+
+LABEL Name=cmake_build Version=0.0.1
 
 # Update package lists and install required dependencies
 RUN apt-get update && \
@@ -21,8 +25,14 @@ RUN pip3 install gcovr
 # Set PATH to include the installed CMake executable
 ENV PATH="/usr/local/bin:${PATH}"
 
+#########################################################
+# Build Second Stage
+#########################################################
+
 # Second part: cmake_app image
 FROM cmake_build AS cmake_app
+
+LABEL Name=cmake_app Version=0.0.1
 
 ARG use_docker=false
 ENV USE_DOCKER=$use_docker
