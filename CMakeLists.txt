@@ -21,7 +21,7 @@ set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
 # Set compiler options for the project
 target_compile_options(${PROJECT_NAME}_compiler_flags INTERFACE
-  "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-fprofile-arcs;-ftest-coverage;--coverage>>"
+  "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-fprofile-arcs;-ftest-coverage;--coverage;-fprofile-instr-generate;-fcoverage-mapping>>"
   "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
 
@@ -31,7 +31,6 @@ target_link_options(${PROJECT_NAME}_compiler_flags INTERFACE
   "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-fprofile-arcs>>"
   "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-ftest-coverage>>"
 )
-
 # Define CMake variables
 option(USE_RINGBUFFER "Enable RingBuffer" ON)
 option(USE_CALCULATOR "Enable Calculator" ON)
@@ -61,10 +60,9 @@ set(APP_LIBRARIES
 source_group("Sources" FILES ${APP_SOURCE})
 # source_group("Headers" FILES ${header_files})
 
-# Enable testing if the ENABLE_TESTING option is on
-if(ENABLE_TESTING)
-	enable_testing()
-endif()
+foreach(LIBRARY ${APP_LIBRARIES})
+	add_subdirectory("${APP_LIBRARIES_DIR}/${LIBRARY}")
+endforeach(LIBRARY)
 
 # Add the executable for the project and link to its libraries and compiler flags
 add_executable(${PROJECT_NAME} ${APP_SOURCE})
@@ -75,20 +73,23 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	"${PROJECT_BINARY_DIR}"
 )
 
-foreach(LIBRARY ${APP_LIBRARIES})
-	add_subdirectory("${APP_LIBRARIES_DIR}/${LIBRARY}")
-endforeach(LIBRARY)
-
 target_link_libraries(${PROJECT_NAME} ${APP_LIBRARIES} ${PROJECT_NAME}_compiler_flags)
 
 add_dependencies(${PROJECT_NAME} ${APP_LIBRARIES})
 
 # Add the install targets for the project
 install(TARGETS ${PROJECT_NAME} 
-	DESTINATION ${CMAKE_BINARY_DIR}/bin
-	RUNTIME DESTINATION ${CMAKE_BINARY_DIR}/bin
+	DESTINATION bin
+	RUNTIME DESTINATION bin
 )
 
 install(FILES "${PROJECT_BINARY_DIR}/AppConfig.hpp"
 	DESTINATION include
 )
+
+if(MSVC)
+  install(TARGETS ${PROJECT_NAME} 
+    DESTINATION  ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
+  )
+endif()
+
